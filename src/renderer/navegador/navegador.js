@@ -298,6 +298,7 @@ function openForm() {
   if ($$('datos_pro').isVisible()) {
     show_products().show()
     $$("newCod_pro").focus()
+    $$("btnActualizar").disable()
   } else {
     if ($$('datos_cli').isVisible()) {
       show_clients().show()
