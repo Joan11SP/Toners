@@ -7,7 +7,7 @@ const { crud_db } = require('./db/controller_products');
 // Mantén una  global del objeto window, si no lo haces, la ventana 
 // se cerrará automáticamente cuando el objeto JavaScript sea eliminado por el recolector de basura.
 
-let db
+let connection
 let win
 let crud
 //crea la ventana principal
@@ -34,15 +34,15 @@ function createLogin() {
     // Emitido cuando la ventana es cerrada.
     win.on('closed', () => {
         //borra instancia de base datos
-        db.close()
-        db = null
+        connection.close()
+        connection = null
         // Elimina la referencia al objeto window, normalmente  guardarías las ventanas
         // en un vector si tu aplicación soporta múltiples ventanas, este es el momento
         // en el que deberías borrar el elemento correspondiente.
         win = null
     })
     //Instancia de la Base de Datos
-    db = connect_db();
+    connection = connect_db();
     //login = login_vali();
     crud = crud_db();
   //  custom=customers()
@@ -83,8 +83,8 @@ app.on('activate', () => {
 
 //validar Login
 ipcMain.on('validation', (event, values) => {
-    db.serialize(function () {
-        db.each("SELECT cedula,contrasena FROM usuarios where tipo=1", (err, cols) => {
+    connection.serialize(function () {
+        connection.each("SELECT cedula,contrasena FROM usuarios where tipo=1", (err, cols) => {
             if (err) {
                 console.log(err);
                 event.reply('validation_reply', 'error ');
