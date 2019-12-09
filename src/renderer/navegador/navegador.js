@@ -20,7 +20,7 @@ var menu = {
     //botones al hacer click ejecutan las funciones.
     {
       id: 'btnNuevo', view: 'button', icon: 'mdi mdi-table', label: 'Nuevo', autowidth: true,
-      click: openForm      
+      click: openForm
     },
     { id: 'btnEliminar', view: 'button', icon: 'mdi mdi-table', label: 'Eliminar', autowidth: true, click: del },
     { id: 'btnCerrarSesion', view: 'button', icon: 'mdi mdi-table', label: 'Cerrar Sesión', autowidth: true, click: closeWin }
@@ -155,27 +155,30 @@ function cargar_productos() {
 //me agrega un nuevo producto a la BDD.
 function save_prodcuts() {
   //if ($$('datos_pro').isVisible()) {
-    const save = $$("id_formPro").getValues();
-    if ($$("id_formPro").validate()) {
-      webix.confirm("Guardar nuevo producto ?", "confirm-warning").then(function () {
-        ipcRenderer.on('insert_products_reply', (event, arg) => {
-          webix.message('Guardado');
-          $$("id_formPro").clear();
-        });
-        var varsave = {
-          cod_pro: $$("newCod_pro").getValue(),
-          nom_pro: $$("newNom_pro").getValue(),
-          mar_pro: $$("newMar_pro").getValue(),
-          pre_pro: $$("newPre_pro").getValue(),
-          iva_pro: $$("newIva_pro").getValue(),
-        }
-        ipcRenderer.send('insert_products', varsave)
+  const save = $$("id_formPro").getValues();
+  if ($$("id_formPro").validate()) {
+    webix.confirm("Guardar nuevo producto ?", "confirm-warning").then(function () {
+      ipcRenderer.on('insert_products_reply', (event, arg) => {
+        webix.message('Guardado');
         $$("datos_producto").add(save);
-      })
-    }
-    else {
-      webix.message({ type: "error", text: "Campos Vacios" });
-    }
+        $$("id_formPro").clear();
+      });
+      ipcRenderer.on('insert_products_unsave', (event, arg) => {
+      });
+      webix.message({ type: "erro", text: "El código ya existe" });
+      var varsave = {
+        cod_pro: $$("newCod_pro").getValue(),
+        nom_pro: $$("newNom_pro").getValue(),
+        mar_pro: $$("newMar_pro").getValue(),
+        pre_pro: $$("newPre_pro").getValue(),
+        iva_pro: $$("newIva_pro").getValue(),
+      }
+      ipcRenderer.send('insert_products', varsave)
+    })
+  }
+  else {
+    webix.message({ type: "error", text: "Campos Vacios" });
+  }
   /*}
   else {
     if ($$('datos_cli').isVisible()) {
